@@ -53,7 +53,7 @@ export default function SignUp() {
             ReactSession.set("token", res.token);
             setstatus(true)
 
-            navigate("/");
+            navigate("/profile");
           }
         })
         .catch((err) => {

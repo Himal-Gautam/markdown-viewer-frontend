@@ -10,7 +10,7 @@
   margin-bottom: 20px;
 }
 
-.AppWrap{
+.AppWrap {
   display: flex;
   flex-direction: row;
   gap: 30px;
@@ -20,4 +20,25 @@
 
 textarea {
   outline: none !important;
+}
+
+.save {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.profileCard {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  gap: 30px;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.profileHeader{
+  padding-left: 30px
 }

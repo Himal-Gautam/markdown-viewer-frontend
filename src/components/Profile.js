@@ -1,114 +1,74 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import {ReactSession} from "react-client-session";
+import { ReactSession } from "react-client-session";
 import { toast } from "react-toastify";
 import { API } from "../global";
-// class Profile extends Component {
-//   constructor(props) {
-//     super(props);
-//     let auth = getAuth();
-//     console.log(auth);
-//     this.state = {
-//       name: auth.currentUser ? auth.currentUser.displayName : null,
-//       email: auth.currentUser ? auth.currentUser.email : null,
-//       changeDetails: false,
-//     };
-//   }
+import TextField from "@mui/material/TextField";
 
-//   render() {
-//     let { name, email, changeDetails } = this.state;
-//     const { navigate } = this.props;
-
-//     const onSubmit = async () => {
-//       try {
-//         if (auth.currentUser.displayName !== name) {
-//           // update display name in firebase
-//           await updateProfile(auth.currentUser, { displayName: name });
-
-//           // update in fs
-//           const userRef = doc(db, "users", auth.currentUser.uid);
-//           await updateDoc(userRef, { name });
-//           toast.success('Profile updated successfully')
-//         }
-//       } catch (error) {
-//         toast.error('Could not update profile details')
-//       }
-//     };
-
-//     // const onChange = (e) => {
-//     //   this.setState({e.target.id: e.target.value})
-//     // }
-// }
-
+import { Button } from "@mui/material";
 function Profile() {
-  const navigate = navigate();
+  const navigate = useNavigate();
   const [changeDetails, setchangeDetails] = useState(false);
   const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [user, setuser] = useState({});
+  const [user, setUser] = useState({});
 
-  (async()=>{
-    try {
-      setuser(await fetch(`${API}/users/me`),{
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-          "Authorization": ReactSession.get("token"),
-        }
+  const onUse=()=> {
+    navigate('/')
+  }
+
+  useEffect(() => {
+    fetch(`${API}/users/me`, {
+      method: "GET",
+      headers: new Headers({
+        Authorization: "Bearer " + ReactSession.get("token"),
+        "Content-Type": "application/json; charset=UTF-8",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        data.name = data.name.toUpperCase();
+        data.email = data.email.toUpperCase();
+        setUser(data);
+        ReactSession.set("uid", data.uid);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      setname(user.name)
-      setemail(user.email)
-    } catch (error) {
-      navigate('/log-in')
-    }
-  })()
- 
-  const onSubmit = async () => {
-    try {
-      if (user.name !== name) {
-        toast.success("Profile updated successfully");
-      }
-    } catch (error) {
-      toast.error("Could not update profile details");
-    }
-  };
+  }, []);
 
   return (
-    <div>hello
-      {/* <header className="profileHeader">
-        <p className="pageHeader">My Profile</p>
+    <div>
+      <header className="profileHeader">
+        <h2 className="pageHeader">My Profile</h2>
       </header>
       <main>
-        <div className="profileDetailsHeader">
-          <p className="profileDetailsText">Personal Details</p>
-          <p
-            className="changePersonalDetails"
-            onClick={() => {
-              changeDetails && onSubmit();
-              this.setState({ changeDetails: !changeDetails });
-            }}
-          >
-            {changeDetails ? "done" : "change"}
-          </p>
-        </div>
         <div className="profileCard">
-          <form>
-            <input
-              type="text"
-              id="name"
-              disabled={!changeDetails}
-              value={name}
-              onChange={(e) => setname({ name: e.target.value })}
-            />
-            <input
-              type="text"
-              id="email"
-              disabled={!changeDetails}
-              value={email}
-            />
-          </form>
+          <TextField
+            margin="normal"
+            required
+            name="name"
+            label="Full Name"
+            type="name"
+            id="name"
+            value={user.name}
+            sx={{ maxWidth: 1 / 4 }}
+          />
+          <TextField
+            margin="normal"
+            required
+            id="email"
+            label="Email Address"
+            name="email"
+            value={user.email}
+            sx={{ maxWidth: 1 / 4 }}
+          />
         </div>
-      </main> */}
+        <div className="save">
+          <Button variant="outlined" sx={{ height: 30 }} onClick={onUse}>
+            Continue using the tool
+          </Button>
+        </div>
+      </main>
     </div>
   );
 }

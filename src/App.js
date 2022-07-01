@@ -3,7 +3,6 @@ import React from "react";
 import PreviewerPage from "./components/PreviewerPage";
 import { SignIn } from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import { ForgotPassword } from "./components/ForgotPassword";
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import { ReactSession } from "react-client-session";
@@ -26,8 +25,6 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="*" element={<SignUp />} />
       </Routes>
       </LoginStatus.Provider>
     </>

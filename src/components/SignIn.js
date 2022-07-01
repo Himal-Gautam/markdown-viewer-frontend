@@ -41,7 +41,7 @@ export function SignIn() {
           if (data.token) {
             ReactSession.set("token", data.token);
             setstatus(true)
-            navigate("/");
+            navigate("/profile");
           }
         })
         .catch((err) => {
@@ -96,11 +96,6 @@ export function SignIn() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
               <Link href="sign-up" variant="body2">
                 {"Don't have an account? Sign Up"}

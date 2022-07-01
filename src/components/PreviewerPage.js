@@ -4,7 +4,9 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
-
+import { Button } from "@mui/material";
+import {ReactSession} from 'react-client-session'
+import {API} from '../global'
 // Allows line breaks with the return button
 marked.setOptions({
   breaks: true,
@@ -16,7 +18,35 @@ const renderer = new marked.Renderer();
 function PreviewerPage() {
   const [markdown, setMarkdown] = useState(placeholder);
 
+  async function onSave() {
+    console.log(ReactSession.get('token'));
+    await fetch(`${API}/data`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": `Bearer ${ReactSession.get('token')}`,
+      },
+      body: JSON.stringify({
+        markdown: markdown,
+      }),
+    })
+      .then((response) => 
+        response.json()
+      )
+      .then((res) => {
+        console.log(res.user);
+        if (res.token) {
+          console.log("here5");
+        }
+      })
+      .catch((err) => {
+        console.log("here6");
+        console.log(err);
+      });
+  }
+
   return (
+    <>
     <div className="AppWrap">
       <Editor
         markdown={markdown}
@@ -24,6 +54,15 @@ function PreviewerPage() {
       />
       <Previewer markdown={markdown} />
     </div>
+    <div className="save">
+    <Button variant="contained" sx={{ height: 30 }} onClick={onSave}>
+                Save Progress
+              </Button>
+    </div>
+   
+    </>
+    
+    
   );
 }
 
