@@ -5,8 +5,10 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { Button } from "@mui/material";
-import {ReactSession} from 'react-client-session'
-import {API} from '../global'
+import { ReactSession } from "react-client-session";
+import { API } from "../global";
+import { useNavigate } from "react-router-dom";
+
 // Allows line breaks with the return button
 marked.setOptions({
   breaks: true,
@@ -17,52 +19,76 @@ const renderer = new marked.Renderer();
 
 function PreviewerPage() {
   const [markdown, setMarkdown] = useState(placeholder);
-
+  const navigate = useNavigate();
+  
   async function onSave() {
-    console.log(ReactSession.get('token'));
-    await fetch(`${API}/data`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-        "Authorization": `Bearer ${ReactSession.get('token')}`,
-      },
-      body: JSON.stringify({
-        markdown: markdown,
-      }),
-    })
-      .then((response) => 
-        response.json()
-      )
-      .then((res) => {
-        console.log(res.user);
-        if (res.token) {
-          console.log("here5");
-        }
+    console.log(ReactSession.get("token"));
+    if (ReactSession.get("token")) {
+      await fetch(`${API}/users/saveData`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          Authorization: `Bearer ${ReactSession.get("token")}`,
+        },
+        body: JSON.stringify({
+          markdown: markdown,
+        }),
       })
-      .catch((err) => {
-        console.log("here6");
-        console.log(err);
-      });
+        .then((response) => response.json())
+        .then((res) => {
+          console.log(res.status);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    else{
+      navigate('/sign-in')
+    }
+  }
+
+  async function onLoad() {
+    console.log(ReactSession.get("token"));
+    if (ReactSession.get("token")) {
+      await fetch(`${API}/users/saveData`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          Authorization: `Bearer ${ReactSession.get("token")}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((res) => {
+          console.log(res.markdown);
+          setMarkdown(res.markdown);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    else{
+      navigate('/sign-in')
+    }
   }
 
   return (
     <>
-    <div className="AppWrap">
-      <Editor
-        markdown={markdown}
-        onChange={(e) => setMarkdown(e.target.value)}
-      />
-      <Previewer markdown={markdown} />
-    </div>
-    <div className="save">
-    <Button variant="contained" sx={{ height: 30 }} onClick={onSave}>
-                Save Progress
-              </Button>
-    </div>
-   
+      <div className="AppWrap">
+        <Editor
+          markdown={markdown}
+          onChange={(e) => setMarkdown(e.target.value)}
+        />
+        <Previewer markdown={markdown} />
+      </div>
+      <div className="save">
+        <Button variant="contained" sx={{ height: 30 }} onClick={onSave}>
+          Save Progress
+        </Button>
+        <Button variant="contained" sx={{ height: 30 }} onClick={onLoad}>
+          Load Last Save Progress
+        </Button>
+      </div>
     </>
-    
-    
   );
 }
 
@@ -70,7 +96,7 @@ export default PreviewerPage;
 
 const Cards = ({ title, content }) => {
   return (
-    <Card sx={{ minWidth: 400, maxWidth:1/3 }} raised={true}>
+    <Card sx={{ minWidth: 400, maxWidth: 1 / 3 }} raised={true}>
       <CardHeader
         title={title}
         sx={{ backgroundColor: "black", color: "white" }}

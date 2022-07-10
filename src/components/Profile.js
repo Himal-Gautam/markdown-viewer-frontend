@@ -12,9 +12,9 @@ function Profile() {
   const [name, setname] = useState("");
   const [user, setUser] = useState({});
 
-  const onUse=()=> {
-    navigate('/')
-  }
+  const onUse = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     fetch(`${API}/users/me`, {
@@ -44,22 +44,15 @@ function Profile() {
       <main>
         <div className="profileCard">
           <TextField
-            margin="normal"
-            required
-            name="name"
             label="Full Name"
-            type="name"
-            id="name"
-            value={user.name}
+            id="outlined-basic"
+            defaultValue={user.name}
             sx={{ maxWidth: 1 / 4 }}
           />
           <TextField
-            margin="normal"
-            required
-            id="email"
+            id="outlined-basic"
             label="Email Address"
-            name="email"
-            value={user.email}
+            defaultValue={user.email}
             sx={{ maxWidth: 1 / 4 }}
           />
         </div>

@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ReactSession } from "react-client-session";
 import { API } from "../global.js";
 import { LoginStatus } from "../App";
-
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import IconButton from "@mui/material/IconButton";
 function Header() {
   const [status, setstatus] = useContext(LoginStatus);
   const location = useLocation();
@@ -27,7 +28,7 @@ function Header() {
     });
 
     ReactSession.remove("token");
-    setstatus(false)
+    setstatus(false);
   }
 
   return (
@@ -40,8 +41,12 @@ function Header() {
       location.pathname === "/sign-up" ? (
         <></>
       ) : (
-        <>
-          {" "}
+        <div className="profileset">
+          {/* <IconButton
+            onClick={status ? navigate("/profile") : navigate("/login")}
+          >
+            <AccountCircleIcon />
+          </IconButton>{" "} */}
           {status ? (
             <Button variant="contained" sx={{ height: 30 }} onClick={onLogOut}>
               Log Out
@@ -51,7 +56,7 @@ function Header() {
               Log In
             </Button>
           )}
-        </>
+        </div>
       )}
     </div>
   );

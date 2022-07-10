@@ -28,6 +28,7 @@ textarea {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  gap: 20px;
 }
 
 .profileCard {
@@ -41,4 +42,11 @@ textarea {
 
 .profileHeader{
   padding-left: 30px
+}
+
+.profileset{
+  display: flex;
+  gap: 30px;
+  flex-direction: row;
+  justify-content: center;
 }

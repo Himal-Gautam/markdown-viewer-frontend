@@ -11,11 +11,11 @@ import { useState, createContext } from "react";
 import ReactDOM from "react-dom/client";
 
 ReactSession.setStoreType("localstorage");
+ReactSession.remove("token");
 export const LoginStatus = createContext()
 
 function App() {
   const [loginStatus, setLoginStatus] = useState(false);
-
   return (
     <>
       <LoginStatus.Provider value={[loginStatus, setLoginStatus]}>
